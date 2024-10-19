@@ -24,6 +24,7 @@ package net.playeranalytics.extension.cmi;
 
 import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.settings.ListenerService;
 import org.bukkit.Bukkit;
 
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class CMIExtensionFactory {
 
 
     public void registerCMIUpdateListeners(Caller caller) {
-        CMIEventListener.register(caller);
+       new CMIEventListener(caller).register();
     }
 
 }

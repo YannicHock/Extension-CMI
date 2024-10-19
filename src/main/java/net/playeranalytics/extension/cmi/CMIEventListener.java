@@ -4,12 +4,11 @@ package net.playeranalytics.extension.cmi;
 import com.Zrips.CMI.Containers.CMIUser;
 import com.Zrips.CMI.events.*;
 import com.djrapitops.plan.extension.Caller;
-import org.bukkit.Bukkit;
+import com.djrapitops.plan.settings.ListenerService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
@@ -21,9 +20,8 @@ public class CMIEventListener implements Listener {
         this.caller = caller;
     }
 
-    public static void register(Caller caller) {
-        Plugin plan = Bukkit.getPluginManager().getPlugin("Plan");
-        Bukkit.getPluginManager().registerEvents(new CMIEventListener(caller), plan);
+    public void register() {
+        ListenerService.getInstance().registerListenerForPlan(this);
     }
 
 /*
