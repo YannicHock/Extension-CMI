@@ -31,7 +31,7 @@ import java.util.Optional;
 /**
  * Factory for DataExtension.
  *
- * @author AuroraLS3
+ * @author YannicHock
  */
 public class CMIExtensionFactory {
 

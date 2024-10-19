@@ -40,7 +40,7 @@ import java.util.UUID;
 /**
  * DataExtension.
  *
- * @author _BOOM_21
+ * @author YannicHock
  */
 @PluginInfo(name = "CMI", iconName = "gear", iconFamily = Family.SOLID, color = Color.DEEP_ORANGE)
 public class CMIExtension implements DataExtension {
