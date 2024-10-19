@@ -20,24 +20,54 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-package net.playeranalytics.extension.pluginname;
+package net.playeranalytics.extension.CMI;
 
+import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.annotation.PluginInfo;
-import com.djrapitops.plan.extension.icon.Color;
-import com.djrapitops.plan.extension.icon.Family;
+import org.bukkit.Bukkit;
+
+import java.util.Optional;
 
 /**
- * DataExtension.
+ * Factory for DataExtension.
  *
  * @author AuroraLS3
  */
-@PluginInfo(name = "", iconName = "", iconFamily = Family.SOLID, color = Color.NONE)
-public class NewExtension implements DataExtension {
+public class CMIExtensionFactory {
 
-    public NewExtension() {
-        // TODO Add required API classes
+    private boolean isAvailable() {
+        try {
+            Class.forName("com.Zrips.CMI.CMI");
+            return Bukkit.getPluginManager().isPluginEnabled("CMI");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
-    // TODO Add Provider methods
+    public Optional<DataExtension> createCMIExtension() {
+        if (isAvailable()) {
+            return Optional.of(new CMIExtension());
+        }
+        return Optional.empty();
+    }
+
+
+    public void registerCMIUpdateListeners(Caller caller) {
+        CMIEventListener.register(caller);
+    }
+
+
+    public Optional<DataExtension> createCMIEcoExtension() {
+        if (isAvailable()) {
+            CMIEcoExtension extension = new CMIEcoExtension();
+            if (CMIEcoExtension.enabled.get()) {
+                return Optional.of(extension);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public void registerEcoUpdateListeners(Caller caller) {
+        CMIEcoEventListener.register(caller);
+    }
 }
