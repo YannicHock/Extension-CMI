@@ -43,6 +43,8 @@ import java.util.UUID;
  * @author YannicHock
  */
 @PluginInfo(name = "CMI", iconName = "gear", iconFamily = Family.SOLID, color = Color.DEEP_ORANGE)
+@TabInfo(tab = "Money", iconName = "coins", elementOrder = {})
+@TabInfo(tab = "General Info", iconName = "list", elementOrder = {})
 public class CMIExtension implements DataExtension {
 
     private CMI cmi;
@@ -69,9 +71,14 @@ public class CMIExtension implements DataExtension {
         return user;
     }
 
+    /*
+    General Info
+     */
+
     @BooleanProvider(
             text = "Jailed", iconName = "ban", priority = 100, iconColor = Color.DEEP_ORANGE, conditionName = "isJailed"
     )
+    @Tab("General Info")
     public boolean isJailed(UUID playerUUID) {
         return getUser(playerUUID).isJailed();
     }
@@ -80,6 +87,7 @@ public class CMIExtension implements DataExtension {
     @NumberProvider(
             text = "Jail Expires", iconName = "calendar-times", priority = 99, iconFamily = Family.REGULAR, iconColor = Color.DEEP_ORANGE, format = FormatType.DATE_SECOND
     )
+    @Tab("General Info")
     public long jailTimeout(UUID playerUUID) {
         return getUser(playerUUID).getJailedForTime();
     }
@@ -87,6 +95,7 @@ public class CMIExtension implements DataExtension {
     @BooleanProvider(
             text = "Muted", iconName = "bell-slash", priority = 80, iconColor = Color.BLUE_GREY, conditionName = "isMuted"
     )
+    @Tab("General Info")
     public boolean isMuted(UUID playerUUID) {
         return getUser(playerUUID).isMuted();
     }
@@ -95,6 +104,7 @@ public class CMIExtension implements DataExtension {
     @NumberProvider(
             text = "Mute Expires", iconName = "calendar-times", priority = 79, iconFamily = Family.REGULAR, iconColor = Color.BLUE_GREY, format = FormatType.DATE_SECOND
     )
+    @Tab("General Info")
     public long muteTimeout(UUID playerUUID) {
         return getUser(playerUUID).getMutedUntil();
     }
@@ -102,6 +112,7 @@ public class CMIExtension implements DataExtension {
     @StringProvider(
             text = "homes", iconName = "home", priority = 70, iconColor = Color.GREEN
     )
+    @Tab("General Info")
     public String playerHomes(UUID playerUUID) {
         List<String> homes = getUser(playerUUID).getHomesList();
         if (homes.isEmpty()) {
@@ -123,4 +134,19 @@ public class CMIExtension implements DataExtension {
         return homeString.toString();
     }
 
+
+    /*
+    Money
+     */
+    @DoubleProvider(
+            text = "Balance", iconName = "coins", priority = 60, iconColor = Color.GREEN
+    )
+    @Tab("Money")
+    public double balance(UUID playerUUID) {
+        if (!cmi.getEconomyManager().isEnabled()) {
+            throw new NotReadyException();
+        }
+
+        return getUser(playerUUID).getBalance();
+    }
 }

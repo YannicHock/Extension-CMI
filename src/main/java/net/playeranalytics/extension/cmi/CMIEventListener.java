@@ -2,12 +2,10 @@ package net.playeranalytics.extension.cmi;
 
 
 import com.Zrips.CMI.Containers.CMIUser;
-import com.Zrips.CMI.events.CMIPlayerJailEvent;
-import com.Zrips.CMI.events.CMIPlayerUnjailEvent;
-import com.Zrips.CMI.events.CMIUserHomeCreateEvent;
-import com.Zrips.CMI.events.CMIUserHomeRemoveEvent;
+import com.Zrips.CMI.events.*;
 import com.djrapitops.plan.extension.Caller;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -85,5 +83,16 @@ public class CMIEventListener implements Listener {
     }
 
  */
+
+    /*
+    Money events
+     */
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onBalanceChange(CMIUserBalanceChangeEvent event) {
+        Player player = event.getUser().getPlayer();
+
+        caller.updatePlayerData(player.getUniqueId(), player.getName());
+    }
 
 }

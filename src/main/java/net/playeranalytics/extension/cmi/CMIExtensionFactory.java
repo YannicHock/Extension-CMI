@@ -56,18 +56,4 @@ public class CMIExtensionFactory {
         CMIEventListener.register(caller);
     }
 
-
-    public Optional<DataExtension> createCMIEcoExtension() {
-        if (isAvailable()) {
-            CMIEcoExtension extension = new CMIEcoExtension();
-            if (CMIEcoExtension.enabled.get()) {
-                return Optional.of(extension);
-            }
-        }
-        return Optional.empty();
-    }
-
-    public void registerEcoUpdateListeners(Caller caller) {
-        CMIEcoEventListener.register(caller);
-    }
 }
