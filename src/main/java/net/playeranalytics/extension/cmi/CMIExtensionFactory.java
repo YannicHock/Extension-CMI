@@ -20,33 +20,54 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-package net.playeranalytics.extension.CMI;
+package net.playeranalytics.extension.cmi;
 
+import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.bukkit.Bukkit;
+
+import java.util.Optional;
 
 /**
- * Test for the implementation of the new extension
+ * Factory for DataExtension.
  *
- * @author AuroraLS3
+ * @author YannicHock
  */
-class ExtensionImplementationTest {
+public class CMIExtensionFactory {
 
-    private ExtensionExtractor extractor;
-
-    @BeforeEach
-    void prepareExtractor() {
-        DataExtension extension = new CMIExtension(true);
-        extractor = new ExtensionExtractor(extension);
+    private boolean isAvailable() {
+        try {
+            Class.forName("com.Zrips.CMI.CMI");
+            return Bukkit.getPluginManager().isPluginEnabled("CMI");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
-    @Test
-    @DisplayName("API is implemented correctly")
-    void noImplementationErrors() {
-        extractor.validateAnnotations();
+    public Optional<DataExtension> createCMIExtension() {
+        if (isAvailable()) {
+            return Optional.of(new CMIExtension());
+        }
+        return Optional.empty();
     }
 
+
+    public void registerCMIUpdateListeners(Caller caller) {
+        CMIEventListener.register(caller);
+    }
+
+
+    public Optional<DataExtension> createCMIEcoExtension() {
+        if (isAvailable()) {
+            CMIEcoExtension extension = new CMIEcoExtension();
+            if (CMIEcoExtension.enabled.get()) {
+                return Optional.of(extension);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public void registerEcoUpdateListeners(Caller caller) {
+        CMIEcoEventListener.register(caller);
+    }
 }

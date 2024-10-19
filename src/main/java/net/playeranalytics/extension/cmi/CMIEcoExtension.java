@@ -1,4 +1,4 @@
-package net.playeranalytics.extension.CMI;
+package net.playeranalytics.extension.cmi;
 
 import com.Zrips.CMI.CMI;
 import com.Zrips.CMI.Containers.CMIUser;
