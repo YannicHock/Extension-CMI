@@ -33,9 +33,7 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * DataExtension.
@@ -65,10 +63,9 @@ public class CMIExtension implements DataExtension {
         };
     }
 
-    private CMIUser getUser(UUID playerUUID) {
+    private Optional<CMIUser> getUser(UUID playerUUID) {
         CMIUser user = cmi.getPlayerManager().getUser(playerUUID);
-        if (user == null) throw new NotReadyException();
-        return user;
+        return Optional.ofNullable(user);
     }
 
     /*
@@ -80,7 +77,7 @@ public class CMIExtension implements DataExtension {
     )
     @Tab("General Info")
     public boolean isJailed(UUID playerUUID) {
-        return getUser(playerUUID).isJailed();
+        return getUser(playerUUID).map(CMIUser::isJailed).orElse(false);
     }
 
     @Conditional("isJailed")
@@ -89,7 +86,7 @@ public class CMIExtension implements DataExtension {
     )
     @Tab("General Info")
     public long jailTimeout(UUID playerUUID) {
-        return getUser(playerUUID).getJailedForTime();
+        return getUser(playerUUID).map(CMIUser::getJailedForTime).orElse(0L);
     }
 
     @BooleanProvider(
@@ -97,7 +94,7 @@ public class CMIExtension implements DataExtension {
     )
     @Tab("General Info")
     public boolean isMuted(UUID playerUUID) {
-        return getUser(playerUUID).isMuted();
+        return getUser(playerUUID).map(CMIUser::isMuted).orElse(false);
     }
 
     @Conditional("isMuted")
@@ -106,7 +103,7 @@ public class CMIExtension implements DataExtension {
     )
     @Tab("General Info")
     public long muteTimeout(UUID playerUUID) {
-        return getUser(playerUUID).getMutedUntil();
+        return getUser(playerUUID).map(CMIUser::getMutedUntil).orElse(0L);
     }
 
     @StringProvider(
@@ -114,7 +111,9 @@ public class CMIExtension implements DataExtension {
     )
     @Tab("General Info")
     public String playerHomes(UUID playerUUID) {
-        List<String> homes = getUser(playerUUID).getHomesList();
+        ArrayList<String> homes = getUser(playerUUID).map(CMIUser::getHomesList).orElse(new ArrayList<>());
+
+        Collections.sort(homes);
         if (homes.isEmpty()) {
             return "-";
         }
@@ -146,7 +145,6 @@ public class CMIExtension implements DataExtension {
         if (!cmi.getEconomyManager().isEnabled()) {
             throw new NotReadyException();
         }
-
-        return getUser(playerUUID).getBalance();
+        return getUser(playerUUID).map(CMIUser::getBalance).orElse(0.0);
     }
 }

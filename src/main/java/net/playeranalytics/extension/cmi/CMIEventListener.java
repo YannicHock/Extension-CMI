@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class CMIEventListener implements Listener {
@@ -30,20 +31,16 @@ public class CMIEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJailEntered(CMIPlayerJailEvent event) {
-        CMIUser user = event.getUser();
-        UUID playerUUID = user.getUniqueId();
-        String playerName = user.getName();
+        Optional<Player> player = Optional.ofNullable(event.getUser().getPlayer());
 
-        caller.updatePlayerData(playerUUID, playerName);
+        player.ifPresent((p) -> caller.updatePlayerData(p.getUniqueId(), p.getName()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJailLeft(CMIPlayerUnjailEvent event) {
-        CMIUser user = event.getUser();
-        UUID playerUUID = user.getUniqueId();
-        String playerName = user.getName();
+        Optional<Player> player = Optional.ofNullable(event.getUser().getPlayer());
 
-        caller.updatePlayerData(playerUUID, playerName);
+        player.ifPresent((p) -> caller.updatePlayerData(p.getUniqueId(), p.getName()));
     }
 
 /*
@@ -51,21 +48,17 @@ public class CMIEventListener implements Listener {
  */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJailLeft(CMIUserHomeCreateEvent event) {
-        CMIUser user = event.getUser();
-        UUID playerUUID = user.getUniqueId();
-        String playerName = user.getName();
+        Optional<Player> player = Optional.ofNullable(event.getUser().getPlayer());
 
-        caller.updatePlayerData(playerUUID, playerName);
+        player.ifPresent((p) -> caller.updatePlayerData(p.getUniqueId(), p.getName()));
     }
 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJailLeft(CMIUserHomeRemoveEvent event) {
-        CMIUser user = event.getUser();
-        UUID playerUUID = user.getUniqueId();
-        String playerName = user.getName();
+        Optional<Player> player = Optional.ofNullable(event.getUser().getPlayer());
 
-        caller.updatePlayerData(playerUUID, playerName);
+        player.ifPresent((p) -> caller.updatePlayerData(p.getUniqueId(), p.getName()));
     }
 
 /*
@@ -88,9 +81,9 @@ public class CMIEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBalanceChange(CMIUserBalanceChangeEvent event) {
-        Player player = event.getUser().getPlayer();
+        Optional<Player> player = Optional.ofNullable(event.getUser().getPlayer());
 
-        caller.updatePlayerData(player.getUniqueId(), player.getName());
+        player.ifPresent((p) -> caller.updatePlayerData(p.getUniqueId(), p.getName()));
     }
 
 }
